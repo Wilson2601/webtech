@@ -230,4 +230,6 @@ def logout():
     return redirect(url_for('portal'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Use the port assigned by the server, or 5000 for local testing
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
