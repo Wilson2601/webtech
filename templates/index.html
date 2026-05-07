@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EDUTECH | Master Your Education</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">EDU<span>TECH</span></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="active">HOME</a>
+            <a href="{{ url_for('courses') }}">COURSES</a>
+            <a href="{{ url_for('bookstore') }}">BOOKSTORE</a>
+            <a href="{{ url_for('forum') }}">FORUM</a>
+            <a href="{{ url_for('portal') }}">PORTAL</a>
+        </div>
+        {% if session.user_email %}
+            <a href="{{ url_for('logout') }}" class="btn-login">LOGOUT</a>
+        {% else %}
+            <a href="{{ url_for('portal') }}" class="btn-login">LOGIN</a>
+        {% endif %}
+    </nav>
+
+    <div class="hero">
+        <h1>Master your <br> <span style="color:var(--accent);">Education.</span></h1>
+        <p>The premium ecosystem for undergraduates. Seamless access to lecture materials.</p>
+        <a href="{{ url_for('portal') }}" class="btn-get-started">Get Started →</a>
+    </div>
+
+    <div class="features-grid">
+        <a href="{{ url_for('courses') }}" class="feature-link">
+            <div class="feature-card">
+                <div class="feature-num">01</div>
+                <h3>Learning Resources</h3>
+                <p>Access high-quality lecture notes and video tutorials.</p>
+            </div>
+        </a>
+        <a href="{{ url_for('bookstore') }}" class="feature-link">
+            <div class="feature-card">
+                <div class="feature-num">02</div>
+                <h3>Smart Bookstore</h3>
+                <p>Digital and physical textbook procurement.</p>
+            </div>
+        </a>
+        <a href="{{ url_for('forum') }}" class="feature-link">
+            <div class="feature-card">
+                <div class="feature-num">03</div>
+                <h3>Peer Collaboration</h3>
+                <p>Join curated study groups and tech forums.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="community-container">
+        <div class="glass-card">
+            <div class="comm-text">
+                <h2>Join the Tech Community</h2>
+                <p style="color: #8b949e; margin-top: 20px;">Collaborate with university peers, ask questions, and share knowledge in real-time.</p>
+                <a href="{{ url_for('forum') }}" class="btn-enter-forum">ENTER FORUM</a>
+            </div>
+            <div class="comm-previews">
+                <div class="post-preview">
+                    <div style="font-weight: bold; font-style: italic;">How to master React Hooks & API?</div>
+                    <div style="color:var(--accent); font-size:10px; font-weight:bold; margin-top:10px; letter-spacing: 1px;">ACTIVE DISCUSSION</div>
+                </div>
+                <div class="post-preview">
+                    <div style="font-weight: bold; font-style: italic;">Best practices for SQL optimization?</div>
+                    <div style="color:var(--accent); font-size:10px; font-weight:bold; margin-top:10px; letter-spacing: 1px;">TRENDING TOPIC</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom:25px;">EDU<span>TECH</span></div>
+                <p style="color: #666; font-size: 14px; line-height: 1.6; width: 250px;">
+                    Empowering the next generation of software engineers through a seamless digital ecosystem.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="{{ url_for('courses') }}">Courses</a></li>
+                    <li><a href="{{ url_for('bookstore') }}">Bookstore</a></li>
+                    <li><a href="{{ url_for('forum') }}">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <ul>
+                    <li><a href="{{ url_for('portal') }}">My Dashboard</a></li>
+                    <li><a href="{{ url_for('bookstore') }}">My Bag</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #1a1e26; margin-top: 60px; padding-top: 40px; text-align: center; color: #444; font-size: 12px; font-weight: bold; letter-spacing: 2px;">
+            © 2026 GLOBAL INSTITUTE OF TECHNOLOGY
+        </div>
+    </footer>
+</body>
+</html>

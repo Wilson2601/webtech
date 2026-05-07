@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookstore | EDUTECH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Global Reset & Body Background */
+        body { 
+            background: linear-gradient(rgba(11, 14, 20, 0.9), rgba(11, 14, 20, 0.9)), 
+                        url("{{ url_for('static', filename='bg.jpg') }}") no-repeat center center fixed; 
+            background-size: cover; 
+            margin: 0; 
+            padding: 0;
+            color: #fff;
+        }
+
+        /* 2x2 Bookstore Grid Layout */
+        .book-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 2x2 Grid */
+            gap: 40px; 
+            padding: 120px 80px 80px; 
+            max-width: 1000px; /* Narrowed to keep cards proportional */
+            margin: 0 auto;
+        }
+
+        .book-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px; 
+            border-radius: 35px; 
+            text-align: center; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .book-card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--accent); 
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .book-card img { 
+            width: 70%; /* Centered and balanced */
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+        }
+
+        /* Bag Sidebar (Drawer) */
+        #bagSidebar {
+            position: fixed;
+            right: -450px; 
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: #0b0e14;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px;
+            box-sizing: border-box;
+            z-index: 3000;
+            box-shadow: -20px 0 40px rgba(0,0,0,0.6);
+        }
+
+        .bag-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Cute Success Pop-out */
+        #successModal {
+            display: none; 
+            position: fixed; 
+            z-index: 5000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(8px);
+        }
+        
+        .cute-window {
+            background: #fff; 
+            width: 320px; 
+            padding: 40px; 
+            border-radius: 40px; 
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">EDU<span>TECH</span></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">HOME</a>
+            <a href="{{ url_for('courses') }}">COURSES</a>
+            <a href="{{ url_for('bookstore') }}" class="active">BOOKSTORE</a>
+            <a href="{{ url_for('forum') }}">FORUM</a>
+            <a href="{{ url_for('portal') }}">PORTAL</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 25px;">
+            <div onclick="toggleBag()" style="cursor: pointer; position: relative; font-size: 22px;">
+                🛍️ <span style="position: absolute; top: -8px; right: -10px; background: #fff; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 50%; font-weight: 900;">
+                    {{ session.cart|length if session.cart else 0 }}
+                </span>
+            </div>
+            <a href="{{ url_for('portal') }}" class="btn-login">LOGIN</a>
+        </div>
+    </nav>
+
+    <div id="bagSidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <h2 style="margin:0; letter-spacing: 1px;">My Bag</h2>
+            <span onclick="toggleBag()" style="cursor:pointer; font-size:35px; color:#555;">&times;</span>
+        </div>
+
+        {% if bag_items %}
+            <div style="max-height: 60vh; overflow-y: auto; margin-bottom: 20px;">
+                {% for item in bag_items %}
+                <div class="bag-item">
+                    <div>
+                        <div style="font-weight:bold; font-size:14px; margin-bottom: 5px;">{{ item.name }}</div>
+                        <div style="color:var(--accent); font-size:13px; font-weight: 800;">RM {{ item.price }}</div>
+                    </div>
+                    <a href="{{ url_for('remove_from_bag', book_id=item.id) }}" style="color: #ff4757; text-decoration: none; font-size: 10px; font-weight: 800; background: rgba(255,71,87,0.1); padding: 5px 12px; border-radius: 8px;">DELETE</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div style="border-top:1px solid #222; padding-top:25px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 25px;">
+                    <span style="color: #888;">Subtotal</span> 
+                    <span style="font-size: 20px; font-weight: 900;">RM {{ total }}</span>
+                </div>
+                
+                <form action="{{ url_for('checkout') }}" method="POST">
+                    <button type="submit" class="btn-login" style="width:100%; border-radius: 20px; padding: 18px; cursor: pointer; text-transform: uppercase;">
+                        Proceed to Checkout
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div style="text-align:center; margin-top:120px;">
+                <p style="color:#444; font-weight: 600;">Bag is empty.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="book-grid">
+        {% for book in books %}
+        <div class="book-card">
+            <img src="{{ url_for('static', filename=book.cover) }}">
+            <h3 style="font-size: 18px; margin-bottom: 10px;">{{ book.name }}</h3>
+            <p style="color: #888; font-size: 15px; margin-bottom: 25px;">RM {{ book.price }}</p>
+            <a href="{{ url_for('add_to_bag', book_id=book.id) }}" class="btn-login" style="display:inline-block; width: 80%;">Add to Bag</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="successModal">
+        <div class="cute-window">
+            <div style="background: #f0fdf4; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                <span style="font-size: 40px;">✨</span>
+            </div>
+            <h2 style="color: #111; margin-bottom: 10px; font-size: 22px; font-weight: 900;">Success!</h2>
+            <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">Your purchase was successful.<br>Check your library for access.</p>
+            <button onclick="closeSuccess()" class="btn-login" style="width: 100%; border-radius: 20px; background: #000; color: #fff;">AWESOME</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleBag() {
+            const sidebar = document.getElementById('bagSidebar');
+            if (sidebar.style.right === "0px") {
+                sidebar.style.right = "-450px";
+            } else {
+                sidebar.style.right = "0px";
+            }
+        }
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('success') === 'true') {
+                document.getElementById('successModal').style.display = "block";
+            }
+        }
+
+        function closeSuccess() {
+            document.getElementById('successModal').style.display = "none";
+            window.history.replaceState({}, document.title, "/bookstore");
+        }
+    </script>
+</body>
+</html>

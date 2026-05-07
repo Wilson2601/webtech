@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Courses | EDUTECH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .header-section { text-align: center; padding: 120px 20px 60px; }
+        .header-section h1 { font-size: 52px; font-weight: 800; margin: 0; }
+        .light-text { color: #fff; }
+        .accent-text { color: var(--accent); }
+
+        .course-container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px; 
+            padding: 0 80px 100px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        .module-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px; 
+            padding: 35px; 
+        }
+        
+        .video-wrapper { width: 100%; aspect-ratio: 16/9; border-radius: 15px; overflow: hidden; margin-bottom: 25px; background: #000; }
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .res-btn { padding: 12px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 11px; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-quiz { background: #6366f1; color: #fff; }
+        .btn-notes { background: #ec4899; color: #fff; }
+        .btn-pdf { background: #f1f5f9; color: #64748b; }
+        .res-btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: #fff; margin: 10% auto; padding: 40px; border-radius: 25px; width: 450px; position: relative; color: #111; }
+        .close-btn { position: absolute; right: 25px; top: 20px; font-size: 28px; cursor: pointer; color: #888; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">EDU<span>TECH</span></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">HOME</a>
+            <a href="{{ url_for('courses') }}" class="active">COURSES</a>
+            <a href="{{ url_for('bookstore') }}">BOOKSTORE</a>
+            <a href="{{ url_for('forum') }}">FORUM</a>
+            <a href="{{ url_for('portal') }}">PORTAL</a>
+        </div>
+        <a href="{{ url_for('portal') }}" class="btn-login">LOGIN</a>
+    </nav>
+
+    <div class="header-section">
+        <h1><span class="light-text">Course</span> <span class="accent-text">Content</span></h1>
+    </div>
+
+    <div class="course-container">
+        <div class="module-card">
+            <div style="color:var(--accent); font-weight:800; font-size:11px; margin-bottom:15px;">MODULE 01</div>
+            <h2 style="margin-bottom:20px;">Web Technology</h2>
+            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/nu_pCVPKzTk"></iframe></div>
+            <div class="resource-grid">
+                <button class="res-btn btn-quiz" onclick="openModal('quiz', 'Web Tech', 'HyperText Markup Language')">Quiz</button>
+                <button class="res-btn btn-notes" onclick="openModal('notes', 'Web Tech')">Notes</button>
+                <button class="res-btn btn-pdf" onclick="alert('Downloading PDF...')">PDF</button>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <div style="color:var(--accent); font-weight:800; font-size:11px; margin-bottom:15px;">MODULE 02</div>
+            <h2 style="margin-bottom:20px;">Data Structures</h2>
+            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/8hly31xKli0"></iframe></div>
+            <div class="resource-grid">
+                <button class="res-btn btn-quiz" onclick="openModal('quiz', 'Data Structures', 'Binary Tree')">Quiz</button>
+                <button class="res-btn btn-notes" onclick="openModal('notes', 'Data Structures')">Notes</button>
+                <button class="res-btn btn-pdf" onclick="alert('Downloading PDF...')">PDF</button>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <div style="color:var(--accent); font-weight:800; font-size:11px; margin-bottom:15px;">MODULE 03</div>
+            <h2 style="margin-bottom:20px;">Database Systems</h2>
+            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/HXV3zeQKqGY"></iframe></div>
+            <div class="resource-grid">
+                <button class="res-btn btn-quiz" onclick="openModal('quiz', 'DBMS', 'Structured Query Language')">Quiz</button>
+                <button class="res-btn btn-notes" onclick="openModal('notes', 'DBMS')">Notes</button>
+                <button class="res-btn btn-pdf" onclick="alert('Downloading PDF...')">PDF</button>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <div style="color:var(--accent); font-weight:800; font-size:11px; margin-bottom:15px;">MODULE 04</div>
+            <h2 style="margin-bottom:20px;">Mobile Design</h2>
+            <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/fis26HvvDII"></iframe></div>
+            <div class="resource-grid">
+                <button class="res-btn btn-quiz" onclick="openModal('quiz', 'Mobile Apps', 'Natively compiled apps')">Quiz</button>
+                <button class="res-btn btn-notes" onclick="openModal('notes', 'Mobile Apps')">Notes</button>
+                <button class="res-btn btn-pdf" onclick="alert('Downloading PDF...')">PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type, title, extra) {
+            const modal = document.getElementById('infoModal');
+            const body = document.getElementById('modalBody');
+            modal.style.display = "block";
+            
+            if(type === 'quiz') {
+                body.innerHTML = `
+                    <h3 style="margin-top:0;">Quiz: ${title}</h3>
+                    <p>Select the correct definition:</p>
+                    <button class="quiz-option" onclick="checkAns(true)" style="width:100%; padding:15px; margin:10px 0; border:1px solid #ddd; border-radius:10px; cursor:pointer; font-weight:600; background:#fff;">${extra}</button>
+                    <button class="quiz-option" onclick="checkAns(false)" style="width:100%; padding:15px; margin:10px 0; border:1px solid #ddd; border-radius:10px; cursor:pointer; font-weight:600; background:#fff;">Incorrect Option</button>
+                    <p id="quiz-feedback" style="margin-top:20px; font-weight:bold;"></p>
+                `;
+            } else {
+                body.innerHTML = `
+                    <h3 style="color:#ec4899; margin-top:0;">Notes: ${title}</h3>
+                    <p style="color:#64748b; line-height:1.6;">These are the comprehensive lecture notes for ${title}. Review the key concepts discussed in the video to prepare for your final assessment.</p>
+                `;
+            }
+        }
+
+        function checkAns(isCorrect) {
+            const fb = document.getElementById('quiz-feedback');
+            fb.innerHTML = isCorrect ? "✅ Correct! Progress Tracked." : "❌ Try again!";
+            fb.style.color = isCorrect ? "#6366f1" : "#ec4899";
+        }
+
+        function closeModal() { document.getElementById('infoModal').style.display = "none"; }
+        window.onclick = function(e) { if(e.target == document.getElementById('infoModal')) closeModal(); }
+    </script>
+</body>
+</html>

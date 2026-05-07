@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forum | EDUTECH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .forum-container { max-width: 1000px; margin: 0 auto; padding: 120px 20px; }
+        .post-card { 
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; 
+            padding: 25px; margin-bottom: 25px;
+        }
+        .reply-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .answer-pill { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 13px; }
+        .reply-form { display: none; margin-top: 15px; }
+        .modal { display:none; position:fixed; z-index:5000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.9); }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">EDU<span>TECH</span></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">HOME</a>
+            <a href="{{ url_for('courses') }}">COURSES</a>
+            <a href="{{ url_for('bookstore') }}">BOOKSTORE</a>
+            <a href="{{ url_for('forum') }}" class="active">FORUM</a>
+            <a href="{{ url_for('portal') }}">PORTAL</a>
+        </div>
+        <a href="{{ url_for('portal') }}" class="btn-login">LOGIN</a>
+    </nav>
+
+    <div class="forum-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <h1>Discussion Forum</h1>
+            <button onclick="document.getElementById('askModal').style.display='block'" class="btn-login" style="border-radius:12px;">+ Ask Question</button>
+        </div>
+
+        {% for post in posts %}
+        <div class="post-card">
+            <div style="display: flex; gap: 20px;">
+                <div style="text-align:center; min-width:40px;">
+                    <div style="cursor:pointer">▲</div>
+                    <div style="font-weight:900; margin:5px 0;">{{ post.votes }}</div>
+                    <div style="cursor:pointer">▼</div>
+                </div>
+                <div style="flex-grow:1;">
+                    <span style="color:var(--accent); font-size:11px; font-weight:bold;">{{ post.tag }}</span>
+                    <h3 style="margin:10px 0;">{{ post.title }}</h3>
+                    <div style="font-size:12px; color:#666;">
+                        Posted by <b>{{ post.author }}</b> on {{ post.date }}
+                        {% if is_admin %}
+                        <a href="{{ url_for('delete_post', post_id=post.id) }}" style="color:#ff4757; margin-left:15px; text-decoration:none; font-weight:bold;">[DELETE POST]</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div onclick="toggleReply('{{ post.id }}')" style="cursor:pointer; color:#888;">💬 {{ post.comments|length }} Reply</div>
+            </div>
+
+            <div class="reply-section">
+                {% for comment in post.comments %}
+                <div class="answer-pill">
+                    <div style="font-weight: bold; color: var(--accent); margin-bottom: 5px;">{{ comment.author }} <small style="color:#555; font-weight:normal;">• {{ comment.date }}</small></div>
+                    <div style="color:#ccc;">{{ comment.text }}</div>
+                </div>
+                {% endfor %}
+
+                <div id="reply-form-{{ post.id }}" class="reply-form">
+                    <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST">
+                        <textarea name="comment" placeholder="Write your answer..." style="width:100%; height:80px; background:rgba(0,0,0,0.2); color:#fff; border:1px solid #333; border-radius:10px; padding:10px; margin-bottom:10px;" required></textarea>
+                        <button type="submit" class="btn-login" style="font-size:11px; padding:8px 20px;">Post Answer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="askModal" class="modal">
+        <div style="background:#fff; color:#000; width:400px; margin:10% auto; padding:40px; border-radius:30px;">
+            <h2 style="margin-top:0;">Ask Question</h2>
+            <form action="{{ url_for('ask_question') }}" method="POST">
+                <select name="tag" style="width:100%; padding:10px; margin-bottom:15px; border-radius:10px;">
+                    <option value="WEB TECHNOLOGY">Web Technology</option>
+                    <option value="DATA STRUCTURES">Data Structures</option>
+                    <option value="DATABASE">Database Systems</option>
+                </select>
+                <textarea name="title" placeholder="Type your question..." style="width:100%; height:100px; padding:10px; border-radius:10px; margin-bottom:20px;" required></textarea>
+                <button type="submit" class="btn-login" style="width:100%; background:#000; color:#fff;">POST</button>
+                <p onclick="document.getElementById('askModal').style.display='none'" style="text-align:center; cursor:pointer; color:#888; margin-top:15px;">Cancel</p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleReply(postId) {
+            var form = document.getElementById('reply-form-' + postId);
+            form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

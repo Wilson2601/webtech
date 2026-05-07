@@ -1,0 +1,52 @@
+[
+    {
+        "id": 3,
+        "author": "bcs24020047",
+        "tag": "WEB TECHNOLOGY",
+        "title": "asdas",
+        "votes": 1,
+        "comments": [
+            {
+                "author": "bcs24020047",
+                "text": "dasdasd",
+                "date": "07/05/2026"
+            }
+        ],
+        "date": "07/05/2026"
+    },
+    {
+        "id": 2,
+        "author": "bcs24020047",
+        "tag": "DATA STRUCTURES",
+        "title": "adasas",
+        "votes": 1,
+        "comments": [
+            {
+                "author": "bcs24020047",
+                "text": "dasas",
+                "date": "07/05/2026"
+            },
+            {
+                "author": "bcs24020047",
+                "text": "sdfsf",
+                "date": "07/05/2026"
+            }
+        ],
+        "date": "07/05/2026"
+    },
+    {
+        "id": 1,
+        "author": "bcs24020047",
+        "tag": "WEB TECHNOLOGY",
+        "title": "what is cs ",
+        "votes": 1,
+        "comments": [
+            {
+                "author": "bcs24020047",
+                "text": "dsadasd",
+                "date": "07/05/2026"
+            }
+        ],
+        "date": "07/05/2026"
+    }
+]

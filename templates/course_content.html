@@ -1,0 +1,20 @@
+<div class="quiz-section" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 30px;">
+    <h3>Module Quick Quiz</h3>
+    <p id="question">What does HTML stand for?</p>
+    <button onclick="checkAnswer('HyperText Markup Language')">HyperText Markup Language</button>
+    <button onclick="checkAnswer('HighTech Modern Language')">HighTech Modern Language</button>
+    <p id="feedback"></p>
+</div>
+
+<script>
+function checkAnswer(ans) {
+    const feedback = document.getElementById('feedback');
+    if(ans === 'HyperText Markup Language') {
+        feedback.innerHTML = "Correct! Progress Tracked.";
+        feedback.style.color = "#a855f7";
+    } else {
+        feedback.innerHTML = "Try again!";
+        feedback.style.color = "red";
+    }
+}
+</script>
